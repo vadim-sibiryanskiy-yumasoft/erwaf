@@ -1,0 +1,10 @@
+-record(http_request_record, 
+    {
+        method,
+        path,
+        params,
+        headers,
+        cookies,
+        body
+    }
+).

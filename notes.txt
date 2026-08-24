@@ -1,0 +1,5 @@
+TODO
+[ ] Create sqli analyzer 
+[ ] Run supervisor and link to app 
+[ ] Restart process on error 
+[ ] Rewrite parser_service.erl
