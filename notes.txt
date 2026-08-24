@@ -1,5 +1,11 @@
 TODO
-[ ] Create sqli analyzer 
+[ ] Create SQLI-analyzer 
+[ ] XSS-analyzer 
 [ ] Run supervisor and link to app 
 [ ] Restart process on error 
 [ ] Rewrite parser_service.erl
+[ ] Get raw HTTP-requests (normal and malicious) for testing
+[ ] Create unit tests
+[ ] ci/cd
+[ ] Make Docker container
+[ ]

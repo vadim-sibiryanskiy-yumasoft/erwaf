@@ -1,5 +1,7 @@
 {application, erwaf, [
-    {description, "An OTP application"},
+    {description, "ErWAF is a Web Application Firewall written in Erlang as an OTP application. 
+        This project is created to study the basics of Erlang, WAF and demonstrate the results."
+    },
     {vsn, "0.1.0"},
     {registered, []},
     {mod, {erwaf_app, []}},

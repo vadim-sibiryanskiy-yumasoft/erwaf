@@ -1,9 +1,11 @@
 -module(waf_analyzer).
 -export([analyze/1]).
 
-analyze(#{body := Body}) ->
-    io:format("Body: ~p~n", [Body]),
-    looks_like_sqli(Body).
+analyze(ParsedRequest) ->
+    io:format("Body: ~p~n", [ParsedRequest]),
+    SqliScore = looks_like_sqli(maps:get(body, ParsedRequest)),
+    {score, SqliScore}.
+    % #{score => SqliScore}.
 
 looks_like_sqli(_Body) ->
-    false.
+    1.

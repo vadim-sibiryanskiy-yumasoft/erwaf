@@ -3,7 +3,7 @@
 -export([start/0]).
 
 start() ->
-    {ok, ListenSocket} = gen_tcp:listen(?PORT, [binary, {packet, 0}, {active, false}]),
+    {ok, ListenSocket} = gen_tcp:listen(?PORT, [binary, {packet, 0}, {active, false}, {reuseaddr, true}]),
     io:format("Server started on port ~p~n", [?PORT]),
     accept_loop(ListenSocket).
 
@@ -23,16 +23,18 @@ read_request(Socket) ->
     {ok, Data}.
 
 process_request(Request) ->
-    Parsed = parser_service:parse(Request),
+    ParsedRequest = parser_service:parse(Request),
     io:format("Received request: ~p~n", [Request]),
-    io:format("Parsed request: ~p~n", [Parsed]),
-    % #{method := M, path := P} = Parsed,
-    Result = waf_analyzer:analyze(Parsed),
+    io:format("Parsed request: ~p~n", [ParsedRequest]),
+    Method = maps:get(method, ParsedRequest),
+    io:format("Method = ~s", [Method]),
 
-    % В данном примере просто возвращаем статический ответ
-    case Result of 
-        {false} -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nGood request!">>;
-        {true} -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nBad request :(">>
+    % #{method := M, path := P} = Parsed,
+    MaliciousScore = waf_analyzer:analyze(ParsedRequest),
+
+    case MaliciousScore of 
+        {score, _Value} -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nGood request!">>
+        % {true} -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nBad request :(">>
     end.
 
 send_response(Socket, Response) ->
