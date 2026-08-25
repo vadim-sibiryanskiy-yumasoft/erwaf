@@ -1,14 +1,14 @@
 TODO
-[x] Create SQLI-analyzer
+[x] XSS-analyzer 
+[x] SQLI-analyzer
     [x] check Form fields;
     [x] GET, POST, HEAD, PUT, DELETE: validate common requests; 
     [ ] match each part: path, body, cookies, user-agent, etc.
-    [ ] block custom requests
+    [ ] block junk requests: non-standard method; non-ANSI
 [x] Typings
 [x] Configure release: compile, run demo, add commands into README
-[x] XSS-analyzer 
+[x] Compiled RegEx in a standalone module
 [ ] Parallel processing of parts of a single request: path, headers, body, etc.
-[ ] Compile RegEx
 [ ] Rewrite parser_service.erl
 [ ] Run supervisor and link to app 
 [ ] Logging score (logger file | ClickHouse)
@@ -19,6 +19,20 @@ TODO
 [ ] Create unit tests
 [ ] ci/cd
 [ ] Integrate with a process written in Python (or any other lang)
+
+---
+
+% /*
+% Pipeline
+% 1 have http request; pass it to general Parser
+% 2 parse http request body and extract data: {method, cookies, body, URL, params, ...}
+% 3 pass the extracted data to respective independent Analyzers (processes); get AnalyzerResponse: {ok|block|Reason|Score}; fail-closed policy of analyzer
+% 4 pass AnalyzerResponse to DecisionMaker: all valid - pass, 1 invalid - block; pass {decision} to ResponseManager
+% 5 ResponseManager (valid|invalid) returns HTTP 403 Forbidden to Client or passes initial http_requst (not the parsed and reconstructed one) next to api server.
+% 6 ResponseManager receives responses from api server and passes to Client
+% Monitor observe each step, logs data, helps false-positive detection.
+% Logging & audit.
+% */
 
 ---
 

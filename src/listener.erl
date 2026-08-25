@@ -1,4 +1,4 @@
--module(http_server).
+-module(listener).
 -define(PORT, 8081).
 -export([start/0]).
 
@@ -24,7 +24,7 @@ read_request(Socket) ->
 
 process_request(Request) ->
     ParsedRequest = parser_service:parse(Request),
-    io:format("Received request: ~p~n", [Request]),
+    % io:format("Received request: ~p~n", [Request]),
     io:format("Parsed request: ~p~n", [ParsedRequest]),
 
     AnomalyScore = waf_analyzer:analyze(ParsedRequest),
@@ -33,7 +33,7 @@ process_request(Request) ->
         {score, Value} when Value =< 0 -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nGood request!">>;
         {score, Value} when Value > 0 -> 
             logger:alert("AnomalyScore = " ++ integer_to_list(Value)),
-            <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nBad request :(">>
+            <<"HTTP/1.1 403 OK\r\nContent-Type: text/plain\r\n\r\nBad request :(">>
     end.
 
 send_response(Socket, Response) ->

@@ -3,6 +3,46 @@ ErWAF
 
 ErWAF is a Web Application Firewall written in Erlang for educational purposes: learning the basics of Erlang, WAF and demonstrating the results.
 
+## Architecture
+
+### Overview
+```mermaid
+graph LR
+    Client(["User, Bot, Malicious staff, DoS (Internet)"]) -->|Port 80/443| WAF["ErWAF"]
+    WAF -->|Internal network Docker| API["API-server"]
+```
+
+### In details
+```mermaid
+graph TD
+    subgraph beam["BEAM node"]
+        app["erwaf_app<br/>application"]
+        sup["erwaf_sup<br/>supervisor · one_for_one"]
+        config["sec_rules<br/>rules, hot-reload"]
+        listener["listener · accepts"]
+        stats["stats (TODO)<br/>gen_server · counters"]
+        pysup["python_supervisor (TODO)<br/>supervisor"]
+        py["python (TODO)<br/>gen_server + port"]
+
+        app --> sup
+        sup --> config
+        sup --> listener
+        sup --> stats
+        sup --> pysup
+        pysup --> py
+    end
+
+    python["python3 process (TODO)<br/>outside the BEAM"]
+    py -.->|port| python
+
+    classDef supervisor fill:#EEEDFE,stroke:#534AB7,color:#26215C
+    classDef worker fill:#E1F5EE,stroke:#0F6E56,color:#04342C
+    classDef external fill:#FAECE7,stroke:#993C1D,color:#4A1B0C,stroke-dasharray:5 4
+
+    class app,sup,pysup supervisor
+    class config,listener,stats,py worker
+    class python external
+```
 
 Build
 -----
@@ -16,7 +56,8 @@ Run in a terminal
 
     rebar3 shell
 
-Run in another terminal
+
+Run the requests below in another terminal
 
 Good requests:
 

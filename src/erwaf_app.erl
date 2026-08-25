@@ -19,10 +19,12 @@ stop(_State) ->
 %% internal functions
 add_persistent_terms() ->
     io:format("erwaf_app:add_persistent_terms~n"),
-    SqliPattern = ~B"(?i)(SELECT\W|UNION\W|INSERT\W|DELETE\W|UPDATE\W|DROP\W|--|;|')",
+    Patterns = sec_rules:get_patterns(),
+    
+    SqliPattern = maps:get(sqliPattern, Patterns),
     {ok, SqliPatternCompiled} = re:compile(SqliPattern, [caseless, multiline]),
     persistent_term:put({erwaf, sqli_mp}, SqliPatternCompiled),
     
-    XssPattern = ~B"(?i)(script|javascript)",
+    XssPattern = maps:get(xssPattern, Patterns),
     {ok, XssPatternCompiled} = re:compile(XssPattern, [caseless, multiline]),
     persistent_term:put({erwaf, xss_mp}, XssPatternCompiled).
