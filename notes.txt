@@ -5,18 +5,20 @@ TODO
     [ ] match each part: path, body, cookies, user-agent, etc.
     [ ] block custom requests
 [x] Typings
-[x] Configure release
+[x] Configure release: compile, run demo, add commands into README
 [x] XSS-analyzer 
-[ ] Run supervisor and link to app 
-[ ] Restart process on error; verify it restarts
+[ ] Parallel processing of parts of a single request: path, headers, body, etc.
+[ ] Compile RegEx
 [ ] Rewrite parser_service.erl
+[ ] Run supervisor and link to app 
+[ ] Logging score (logger file | ClickHouse)
+[ ] Make Docker container for demo
+--
+[ ] Restart process on error; verify it restarts
 [ ] Download raw HTTP-requests (normal and malicious) for testing
 [ ] Create unit tests
 [ ] ci/cd
-[ ] Make Docker container
-[ ] Compile RegEx
-[ ] Logging score (logger file | ClickHouse)
-
+[ ] Integrate with a process written in Python (or any other lang)
 
 ---
 

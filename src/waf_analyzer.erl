@@ -5,15 +5,11 @@
 analyze(ParsedRequest) ->
     io:format("Body: ~p~n", [ParsedRequest]),
     
-    SqliPattern = ~B"(?i)(SELECT\W|UNION\W|INSERT\W|DELETE\W|UPDATE\W|DROP\W|--|;|')",
-    {ok, SqliPatternCompiled} = re:compile(SqliPattern, [caseless, multiline, unicode]),
-    
+    SqliPatternCompiled = persistent_term:get({erwaf, sqli_mp}),
     SqliScoreBody = sqli_score(maps:get(body, ParsedRequest), SqliPatternCompiled),
     SqliScorePath = sqli_score(maps:get(path, ParsedRequest), SqliPatternCompiled),
 
-    XssPattern = ~B"(?i)(script|javascript)",
-    % XssPattern = ~B"(?i)(<([A-Za-z_{}()/]+(\s|=)*)+>(.*<[A-Za-z/>]+)*)",
-    {ok, XssPatternCompiled} = re:compile(XssPattern, [caseless, multiline, unicode]),
+    XssPatternCompiled = persistent_term:get({erwaf, xss_mp}),
     XssScoreBody = xss_score(maps:get(body, ParsedRequest), XssPatternCompiled),
     XssScorePath = xss_score(maps:get(path, ParsedRequest), XssPatternCompiled),
     

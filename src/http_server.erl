@@ -27,14 +27,13 @@ process_request(Request) ->
     io:format("Received request: ~p~n", [Request]),
     io:format("Parsed request: ~p~n", [ParsedRequest]),
 
-    MaliciousnessScore = waf_analyzer:analyze(ParsedRequest),
+    AnomalyScore = waf_analyzer:analyze(ParsedRequest),
 
-    case MaliciousnessScore of 
+    case AnomalyScore of 
         {score, Value} when Value =< 0 -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nGood request!">>;
         {score, Value} when Value > 0 -> 
-            logger:alert("MaliciousnessScore = " ++ integer_to_list(Value)),
+            logger:alert("AnomalyScore = " ++ integer_to_list(Value)),
             <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nBad request :(">>
-        % {true} -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nBad request :(">>
     end.
 
 send_response(Socket, Response) ->
