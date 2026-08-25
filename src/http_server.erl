@@ -26,14 +26,14 @@ process_request(Request) ->
     ParsedRequest = parser_service:parse(Request),
     io:format("Received request: ~p~n", [Request]),
     io:format("Parsed request: ~p~n", [ParsedRequest]),
-    Method = maps:get(method, ParsedRequest),
-    io:format("Method = ~s", [Method]),
 
-    % #{method := M, path := P} = Parsed,
-    MaliciousScore = waf_analyzer:analyze(ParsedRequest),
+    MaliciousnessScore = waf_analyzer:analyze(ParsedRequest),
 
-    case MaliciousScore of 
-        {score, _Value} -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nGood request!">>
+    case MaliciousnessScore of 
+        {score, Value} when Value =< 0 -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nGood request!">>;
+        {score, Value} when Value > 0 -> 
+            logger:alert("MaliciousnessScore = " ++ integer_to_list(Value)),
+            <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nBad request :(">>
         % {true} -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nBad request :(">>
     end.
 

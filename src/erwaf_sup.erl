@@ -31,7 +31,15 @@ init([]) ->
         intensity => 5,
         period => 10
     },
-    ChildSpecs = [],
+    ChildSpecs = [
+        % #{id        => http_server,
+        %   start     => {http_server, start, [8081]},    %% {M, F, A} to run,
+        %   restart   => permanent,                       %% restart for any stop reason: exit, error, throw (permanent)
+        %   shutdown  => 5000,
+        %   type      => worker,                          %% worker | supervisor
+        %   modules   => [http_server]
+        % }
+    ],
     {ok, {SupFlags, ChildSpecs}}.
 
 %% internal functions
