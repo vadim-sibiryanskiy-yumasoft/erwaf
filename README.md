@@ -73,8 +73,7 @@ Good requests:
         married:=false \
         hobbies:='["http", "pies"]' \
         favorite:='{"tool": "HTTPie"}' \
-        bookmarks:=@./data.json \
-        description=@./notes.txt
+        bookmarks:=@./data.json
     http -v HEAD "localhost:8081/"
 
 Bad requests:
@@ -88,3 +87,10 @@ Bad requests:
     http -v PUT localhost:8081/put name='DROP TABLE Users;' email=john@example.org
     http -v GET "localhost:8081/query=<script>alert(1)</script>"
     http -v HEAD "localhost:8081/'Select * From Items where 1=1;--'"
+    http -v PUT localhost:8081/put \
+        name=John \
+        age:=29 \
+        married:=false \
+        hobbies:='["http", "pies"]' \
+        favorite:='{"tool": "HTTPie"}' \
+        description=@./notes.txt
