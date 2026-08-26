@@ -1,3 +1,6 @@
+rebar3 release 
+_build/default/rel/erwaf/bin/erwaf console
+---
 TODO
 [x] XSS-analyzer 
 [x] SQLI-analyzer
@@ -12,11 +15,14 @@ TODO
 [ ] Rewrite parser_service.erl
 [ ] Run supervisor and link to app 
 [ ] Logging score (logger file | ClickHouse)
-[ ] Make Docker container for demo
 --
+[ ] Reverse proxy:
+    [ ] Valid: Pass to API server
+    [ ] Invalid: reject
 [ ] Restart process on error; verify it restarts
 [ ] Download raw HTTP-requests (normal and malicious) for testing
 [ ] Create unit tests
+[ ] Make Docker container for demo
 [ ] ci/cd
 [ ] Integrate with a process written in Python (or any other lang)
 
@@ -47,7 +53,7 @@ Run in a terminal
 Run in another terminal
 Good requests:
 http -v GET localhost:8081/api/v1/users/123 'hello=world'
-http -v -f POST localhost:8081/post hello=World
+http -v -f POST 'localhost:8081/api/v1/post?id=123' hello=World
 http -v DELETE localhost:8081/item/1
 http -v PUT localhost:8081/put name=John email=john@example.org
 http -v PUT localhost:8081/put \

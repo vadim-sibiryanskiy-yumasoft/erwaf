@@ -1,7 +1,8 @@
 ErWAF
 =====
 
-ErWAF is a Web Application Firewall written in Erlang for educational purposes: learning the basics of Erlang, WAF and demonstrating the results.
+ErWAF is a naive implementation of Web Application Firewall written in Erlang for educational purposes.
+This project is created to study the basics of Erlang, WAF and demonstrate the results.
 
 ## Architecture
 
@@ -62,8 +63,8 @@ Run the requests below in another terminal
 
 Good requests:
 
-    http -v GET localhost:8081/api/v1/users/123 'hello=world'
-    http -v -f POST localhost:8081/post hello=World
+    http -v GET localhost:8081/api/v1/users/123 hello=world
+    http -v -f POST 'localhost:8081/api/v1/post?id=123' hello=World
     http -v DELETE localhost:8081/item/1
     http -v PUT localhost:8081/put name=John email=john@example.org
     http -v PUT localhost:8081/put \
@@ -78,10 +79,10 @@ Good requests:
 
 Bad requests:
 
-    http -v GET localhost:8081/api/'SELECT * from U;--' 'username=Select * from Users;--'
-    http -v GET localhost:8081/api/'select * from U;--' "username=UPDATE users SET pass = '1' where user = 't1' OR 1=1--"
+    http -v GET localhost:8081/api/'SELECT * from Users;--' 'username=Select * from Users;--'
+    http -v GET localhost:8081/api/'select * from Users;--' "username=UPDATE users SET pass = '1' where user = 't1' OR 1=1--"
     http -v GET localhost:8081/api/"username=SELECT * from table where id = 1 union select 1,2,3"
-    http -v GET "localhost:8081/user/admin’ OR ‘1’=’1"
+    http -v GET "localhost:8081/user/admin' OR '1'='1"
     http -v -f POST localhost:8081/post/'userid=SELECT * from Users where 1=1;--' "username=SELECT * from table where id = 1 union select 1,2,3"
     http -v DELETE localhost:8081/item/'Select * From Items where 1=1;--'
     http -v PUT localhost:8081/put name='DROP TABLE Users;' email=john@example.org
