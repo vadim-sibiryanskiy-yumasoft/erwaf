@@ -13,24 +13,30 @@ accept_loop(ListenSocket) ->
     accept_loop(ListenSocket).
 
 handle_request(Socket) ->
-    {ok, Request} = read_request(Socket),
-    Response = process_request(Request),
+    {ok, Packet} = read_request(Socket),
+    Response = process_request(Packet),
     send_response(Socket, Response),
     gen_tcp:close(Socket).
 
 read_request(Socket) ->
-    {ok, Data} = gen_tcp:recv(Socket, 0),
-    {ok, Data}.
+    {ok, Packet} = gen_tcp:recv(Socket, 0),
+    {ok, Packet}.
 
-process_request(Request) ->
-    io:format("Received request: ~p~n", [Request]),
-    ParsedRequest = parser_service:parse(Request),
-    io:format("Parsed request: ~p~n", [ParsedRequest]),
-
-    AnomalyScore = waf_analyzer:analyze(ParsedRequest),
+-spec process_request(Packet :: binary()) -> binary().
+process_request(Packet) ->
+    io:format("Received Packet: ~p~n", [Packet]),
+    
+    ParseResult = parser_service:parse(Packet),
+    case ParseResult of
+        {ok, ParsedPacket} ->
+            AnomalyScore = waf_analyzer:analyze(ParsedPacket);
+        {error, Reason} -> 
+            logger:alert("Oversized Packet = " ++ Reason),
+            AnomalyScore = {score, 10}
+    end,
 
     case AnomalyScore of 
-        {score, Value} when Value =< 0 -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nGood request!">>;
+        {score, Value} when Value =:= 0 -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nGood request!">>;
         {score, Value} when Value > 0 -> 
             logger:alert("AnomalyScore = " ++ integer_to_list(Value)),
             <<"HTTP/1.1 403 OK\r\nContent-Type: text/plain\r\n\r\nBad request :(">>
