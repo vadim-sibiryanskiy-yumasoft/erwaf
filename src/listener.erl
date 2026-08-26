@@ -23,8 +23,8 @@ read_request(Socket) ->
     {ok, Data}.
 
 process_request(Request) ->
+    io:format("Received request: ~p~n", [Request]),
     ParsedRequest = parser_service:parse(Request),
-    % io:format("Received request: ~p~n", [Request]),
     io:format("Parsed request: ~p~n", [ParsedRequest]),
 
     AnomalyScore = waf_analyzer:analyze(ParsedRequest),

@@ -32,12 +32,12 @@ init([]) ->
         period => 10
     },
     ChildSpecs = [
-        % #{id        => http_server,
-        %   start     => {http_server, start, [8081]},    %% {M, F, A} to run,
+        % #{id        => listener,
+        %   start     => {listener, start, [8081]},    %% {M, F, A} to run,
         %   restart   => permanent,                       %% restart for any stop reason: exit, error, throw (permanent)
         %   shutdown  => 5000,
         %   type      => worker,                          %% worker | supervisor
-        %   modules   => [http_server]
+        %   modules   => [listener]
         % }
     ],
     {ok, {SupFlags, ChildSpecs}}.

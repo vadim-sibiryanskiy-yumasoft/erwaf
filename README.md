@@ -44,17 +44,18 @@ graph TD
     class python external
 ```
 
-Build
+<!-- Build
 -----
 
-    rebar3 compile
+    rebar3 compile -->
 
 ---
 
 ### Testing in shell
 Run in a terminal
 
-    rebar3 shell
+    % rebar3 shell
+    1> listener:start().
 
 
 Run the requests below in another terminal
