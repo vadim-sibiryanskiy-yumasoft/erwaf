@@ -39,7 +39,7 @@ process_request(Packet) ->
         {score, Value} when Value =:= 0 -> <<"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nGood request!">>;
         {score, Value} when Value > 0 -> 
             logger:alert("AnomalyScore = " ++ integer_to_list(Value)),
-            <<"HTTP/1.1 403 OK\r\nContent-Type: text/plain\r\n\r\nBad request :(">>
+            <<"HTTP/1.1 403 Forbidden\r\nContent-Type: text/plain\r\n\r\nBad request :(">>
     end.
 
 send_response(Socket, Response) ->

@@ -30,6 +30,6 @@ request_line(Bin) ->
 %% Pull headers recursively, until decode_packet returns http_eoh
 headers(Bin, Acc) ->
     case erlang:decode_packet(httph_bin, Bin, []) of
-        {ok, {'http_header', _, HttpField, _UnmodifiedField, Value}, Rest} -> headers(Rest, [{HttpField, Value} | Acc]);
+        {ok, {http_header, _, HttpField, _UnmodifiedField, Value}, Rest} -> headers(Rest, [{HttpField, Value} | Acc]);
         {ok, http_eoh, Rest} -> {ok, lists:reverse(Acc), Rest}
     end.
